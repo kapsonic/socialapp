@@ -1,0 +1,22 @@
+{% extends 'demosocial/layout.html' %} 
+{% block content %}
+<form action="{% url 'admin' %}" method="POST">
+{% csrf_token %}
+    <div id="content">
+        <div class="row">
+            <div class="col-md-4">
+                {% include 'demosocial/knowledge.html' %}
+            </div>
+            <div class="col-md-4">
+                {% include 'demosocial/location.html' %}
+            </div>
+            <div class="col-md-4">
+                {% include 'demosocial/behaviour.html' %}
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+{% endblock %}

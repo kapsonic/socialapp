@@ -1,0 +1,80 @@
+<div class="" margin-left="15px">
+    <div class="col-sm-12">
+        <label for="">
+            <input type="radio" name="auth_type" value="L" /> Location Based
+        </label>
+        <div class="form-group form-group-modified">
+            <div class="row row-margin">
+                <div class="col-sm-12">
+                    <input name="lat" id="lat" class="form-control form-control-width" type="text" placeholder="lat">
+                    <input name="lang" id="lang" class="form-control form-control-width" type="text" placeholder="Lang">
+                   
+                </div>
+            </div>
+            <div class="row row-margin">
+                <div class="col-sm-12">
+                    <div id="dvMap" class="map-container marginTop-40">
+                        <h3>Loading...</h3></div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{map_key}}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    console.log("Checking geolocation", navigator.geolocation.getCurrentPosition);
+    if (navigator.geolocation) {
+        console.log("Geolocation service is there.");
+        navigator.geolocation.getCurrentPosition(function(p) {
+            console.log("Called this with geolocation", p);
+            var LatLng = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
+            var mapOptions = {
+                center: LatLng,
+                zoom: 13,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
+            var marker = new google.maps.Marker({
+                position: LatLng,
+                map: map,
+                title: "<div style = 'height:60px;width:200px'><b>Your location:</b><br />Latitude: " + p.coords.latitude + "<br />Longitude: " + p.coords.longitude
+            });
+            google.maps.event.addListener(marker, "click", function(e) {
+                var infoWindow = new google.maps.InfoWindow();
+                infoWindow.setContent(marker.title);
+                infoWindow.open(map, marker);
+            });
+
+            google.maps.event.addListener(map, "click", function(e) {
+                $("#lat").val(e.latLng.lat());
+                $("#lang").val(e.latLng.lng());
+            });
+            $("#lat").val(p.coords.latitude);
+            $("#lang").val(p.coords.longitude);
+        }, function() {
+            var LatLng = new google.maps.LatLng('37.0902', '95.7129');
+            var mapOptions = {
+                center: LatLng,
+                zoom: 2,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
+
+            google.maps.event.addListener(map, "click", function(e) {
+                $("#lat").val(e.latLng.lat());
+                $("#lang").val(e.latLng.lng());
+            });
+            alert("Could not find your current location");
+
+        });
+    } else {
+        alert('Geo Location feature is not supported in this browser.');
+    }
+    $("#submit").click(function(e) {
+        e.preventDefault();
+        makeInitSessionCall().then(addLocationChallenge).then(getQRCode).then(poll);
+    });
+});
+</script>
