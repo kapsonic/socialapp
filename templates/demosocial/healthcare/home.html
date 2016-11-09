@@ -1,0 +1,60 @@
+{% extends 'demosocial/layout.html' %} {% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1><i class="fa fa-heartbeat"></i>&nbsp;Healthcare Portal</h1>
+    </div>
+</div>
+<div class="row" style="margin-top: 50px">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="col-md-6">
+            <img src="http://doctornxt.com/images/dummy.jpg" alt="" class="img-responsive">
+        </div>
+        <div class="col-md-6" id="cnt">
+            <div class="col-md-6 col-md-offset-6" style="margin-top: 20px;">
+                <p id="p1" class="text-info">Please login to access medical record</p>
+                <p id="p2" class="text-success">Welcome <span id="username"></span>, Scan to access medical record.</p>
+                <p id="p3" class="text-danger">Sorry, thats not you!</p>
+                <form id="email-form">
+                    <div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email address</label>
+                            <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                        </div>
+                        <button id="submit" class="btn btn-primary">Login</button>
+                    </div>
+                </form>
+            </div>
+            <img class="img-responsive pull-right" id="qr-img" src="">
+        </div>
+    </div>
+</div>
+<footer style="position: absolute;bottom: 10px;width: 90%">
+    <div class="row">
+        <div class="col-md-12">
+            <a href="{% url 'healthcare' %}" class="pull-right btn btn-danger">Quit</a>
+        </div>
+    </div>
+</footer>
+{% endblock %} {% block javascripts %}
+<script type="text/javascript">
+$('#p2').hide();
+$('#p3').hide();
+$(document).ready(function() {
+    $("#submit").click(function(e) {
+        e.preventDefault();
+        makeInitSessionCall().then(createChallenge).then(getQRCode).then(poll).then(function(r) {
+            if (r) {
+                
+                $("#qr-img").attr("src", "http://ocgainesville.org/assets/2013/02/medical-record-other-antibiotics-e1404789839762.jpg");
+                $("#p2").hide();
+                
+            } else {
+            	$("#p2").hide();
+            	$("#p3").show();
+                $("#qr-img").attr("src", "https://cdn0.iconfinder.com/data/icons/shift-free/32/Error-128.png");
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

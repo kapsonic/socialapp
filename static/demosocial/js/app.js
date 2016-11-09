@@ -19,6 +19,13 @@ function getQRCode() {
     return $.get(urls.getCode, { sessionToken: localStorage.getItem('sessionToken') }, function(response) {
         if (typeof window.orientation == 'undefined') {
             $("#icon-img").hide();
+            $("#email-form").hide();
+            $("#p1").hide();
+            var u = $("#exampleInputEmail1").val();
+            if(u) {
+                $("#username").text(u.split('@')[0]);
+            }
+            $("#p2").show();
             $("#qr-img").attr("src", response);
         }
     });
@@ -44,15 +51,11 @@ function poll() {
             console.log(response);
             $("#polling-status-ip").val(response.sessionStatus);
             if (response.sessionStatus === "FAILED") {
-                $("#qr-img").attr("src", "https://cdn0.iconfinder.com/data/icons/shift-free/32/Error-128.png");
                 clearInterval(clear);
-                $("#info").text("Sorry, thats not you!");
-                dfd.resolve();
+                dfd.resolve(false);
             } else if (response.sessionStatus === "SUCCESS") {
-                $("#qr-img").attr("src", "https://www.stagecoach.co.uk/Stagecoach/media/images/Parties/Mini%20Width/536x327-pop-party.jpg?width=536&height=326&ext=.jpg");
-                $("#info").text("Cool picture");
                 clearInterval(clear);
-                dfd.resolve();
+                dfd.resolve(true);
             }
             
         });

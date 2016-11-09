@@ -45,10 +45,13 @@ def admin(request):
 	return render(request, 'demosocial/base.html', {"map_key" : _getMapKey(request)})
 
 def home(request):
-	return render(request, 'demosocial/home.html')
+	return render(request, 'demosocial/social/home.html')
 
 def chat(request):
-	return render(request, 'demosocial/chat.html', {"username": request.session['username']})
+	return render(request, 'demosocial/social/chat.html', {"username": request.session['username']})
+
+def healthCareHome(request):
+	return render(request, 'demosocial/healthcare/home.html')
 	
 def initSession(request):
 	

@@ -4,7 +4,8 @@ from . import views
 
 urlpatterns = [
     url(r'^admin', views.admin, name="admin"),
-    url(r'^home', views.home, name="home"),
+    url(r'^social', views.home, name="home"),
+    url(r'^healthcare', views.healthCareHome, name="healthcare"),
     url(r'^chat', views.chat, name="chat"),
     url(r'^initSession', views.initSession, name="initSession"),
     url(r'^getCode', views.getCode, name="getCode"),

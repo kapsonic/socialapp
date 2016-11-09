@@ -26,7 +26,15 @@
 $(document).ready(function() {
     $("#icon-img").click(function(e) {
         e.preventDefault();
-        createChallenge().then(getQRCode).then(poll);
+        createChallenge().then(getQRCode).then(poll).then(function(r) {
+            if(r) {
+                $("#qr-img").attr("src", "https://www.stagecoach.co.uk/Stagecoach/media/images/Parties/Mini%20Width/536x327-pop-party.jpg?width=536&height=326&ext=.jpg");
+                $("#info").text("Cool picture");
+            } else {
+                $("#qr-img").attr("src", "https://cdn0.iconfinder.com/data/icons/shift-free/32/Error-128.png");
+                $("#info").text("Sorry, thats not you!");
+            }
+        });
     });
 });
 </script>
