@@ -44,26 +44,31 @@ def admin(request):
 		else:
 			request.session['orientation'] = request.POST['orientation']
 			request.session['touches'] = request.POST['touches']
-	else:
-		request.session['api_key'] = settings.LIVE_ENSURE["API_KEY"]
-		request.session['api_password'] = settings.LIVE_ENSURE["API_PASSWORD"]
-		request.session['agent_id'] = settings.LIVE_ENSURE["AGENT_ID"]
-		print(request.session.keys())
+
 	ctx = {
 		"map_key": _getMapKey(request),
 	}
+
 	for i in request.session.keys():
-		print(i , request.session[i])
 		ctx[i] = request.session[i]
 	return render(request, 'demosocial/base.html', ctx)
 
 def home(request):
+	request.session['api_key'] = settings.LIVE_ENSURE["API_KEY"]
+	request.session['api_password'] = settings.LIVE_ENSURE["API_PASSWORD"]
+	request.session['agent_id'] = settings.LIVE_ENSURE["AGENT_ID"]
 	return render(request, 'demosocial/social/home.html')
 
 def chat(request):
+	request.session['api_key'] = settings.LIVE_ENSURE["API_KEY"]
+	request.session['api_password'] = settings.LIVE_ENSURE["API_PASSWORD"]
+	request.session['agent_id'] = settings.LIVE_ENSURE["AGENT_ID"]
 	return render(request, 'demosocial/social/chat.html', {"username": request.session['username']})
 
 def healthCareHome(request):
+	request.session['api_key'] = settings.LIVE_ENSURE["API_KEY"]
+	request.session['api_password'] = settings.LIVE_ENSURE["API_PASSWORD"]
+	request.session['agent_id'] = settings.LIVE_ENSURE["AGENT_ID"]
 	return render(request, 'demosocial/healthcare/home.html')
 	
 def initSession(request):
