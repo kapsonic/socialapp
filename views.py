@@ -33,15 +33,9 @@ def admin(request):
 		for i in request.POST.keys():
 			request.session[i] = request.POST[i]
 	else:
-		if(not hasattr(settings, "LIVE_ENSURE") or
-				not settings.LIVE_ENSURE["API_KEY"] or
-				not settings.LIVE_ENSURE["API_PASSWORD"] or
-				not settings.LIVE_ENSURE["AGENT_ID"]):
-			return render(request, "liveensure/settings.html")
-		else:
-			request.session['api_key'] = settings.LIVE_ENSURE["API_KEY"]
-			request.session['api_password'] = settings.LIVE_ENSURE["API_PASSWORD"]
-			request.session['agent_id'] = settings.LIVE_ENSURE["AGENT_ID"]
+		request.session['api_key'] = settings.LIVE_ENSURE["API_KEY"]
+		request.session['api_password'] = settings.LIVE_ENSURE["API_PASSWORD"]
+		request.session['agent_id'] = settings.LIVE_ENSURE["AGENT_ID"]
 	return render(request, 'demosocial/base.html', {"map_key" : _getMapKey(request)})
 
 def home(request):
