@@ -1,12 +1,13 @@
 <div class="col-sm-12">
     <label for="">
-        <input type="radio" name="auth_type" value="B" /> Behaviour Based
+        <input type="radio" name="auth_type" value="B" id="B-radio"/> Behaviour Based
     </label>
     <div class="form-group form-group-modified">
         <div class="row">
             <div class="col-sm-12">
                 <label for="orientation1">Select orientation</label>
                 <select class="form-control" name="orientation" id="orientation1">
+                    <option value=-1>--Select--</option>
                     <option value=0>Portrait</option>
                     <option value=1>Upside down</option>
                     <option value=2>Landscape Left</option>
@@ -84,18 +85,46 @@ $(document).ready(function() {
             $(this).addClass("clicked");
             touches.push($(this).text());
         }
-        console.log(touches);
+        $("#touches").val(touches.join(','));
     });
     $("#landscape").hide();
+    $("#portrait").hide();
+
     $("#orientation1").change(function() {
+        $("table td.clicked").trigger('click');
+        touches = [];
+        $("#touches").val('');
         var val = $(this).val();
-        if (val <= 1) {
+        console.log(val >= 0);
+        if (val <= 1 && val >= 0) {
             $("#portrait").show();
             $("#landscape").hide();
-        } else {
+        } else if(val >= 0) {
             $("#portrait").hide();
             $("#landscape").show();
+        } else {
+            $("#landscape").hide();
+            $("#portrait").hide();
         }
-    })
+    });
+
+    $("#orientation1").val("{{orientation}}").trigger("change");
+    var ori = {{orientation}} + 0;
+    var touches = "{{touches}}".split(",");
+    console.log(touches);
+    if(touches && ori >= 0 && ori <= 1) {
+        $("#portrait table td").each(function(el, e) {
+            if(touches.indexOf( e.innerText ) != -1) {
+                $(e).trigger('click');
+            }
+        });    
+    } else if(touches && ori > 1) {
+        $("#landscape table td").each(function(el, e) {
+            if(touches.indexOf( e.innerText ) != -1) {
+                $(e).trigger('click');
+            }
+        });    
+    }
+    
 });
 </script>

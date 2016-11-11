@@ -1,13 +1,13 @@
 <div class="col-sm-12">
     <label for="">
-        <input type="radio" name="auth_type" value="K" /> Knowledge Based
+        <input type="radio" name="auth_type" value="K" id="K-radio"/> Knowledge Based
     </label>
     <div class="form-group form-group-modified">
         <div class="row row-margin">
             <div class="col-sm-12">
                 <input type="hidden" name="sessionToken" id="question-sessionToken" />
-                <input class="form-control form-control-decrease-width" type="text" name="question" placeholder="Challenge">
-                <input class="form-control form-control-decrease-width2" type="text" name="answer" placeholder="PIN">
+                <input class="form-control form-control-decrease-width" type="text" name="question" placeholder="Challenge" value="{{question}}">
+                <input class="form-control form-control-decrease-width2" type="text" name="answer" placeholder="PIN" value="{{answer}}">
             </div>
         </div>
     </div>

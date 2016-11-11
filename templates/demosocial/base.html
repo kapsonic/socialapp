@@ -19,4 +19,13 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </form>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $("document").ready(function() {
+        $("#{{auth_type}}-radio").attr('checked', true);
+    });
+</script>
 {% endblock %}

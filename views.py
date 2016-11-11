@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.conf import settings
 from django.http import HttpResponse
 from .api import *
+import json
 # Create your views here.
 # 
 
@@ -30,13 +31,31 @@ def createLiveObject(request):
 
 def admin(request):
 	if(request.method == 'POST'):
-		for i in request.POST.keys():
-			request.session[i] = request.POST[i]
+		authType = request.POST['auth_type']
+		request.session.clear()
+		request.session['auth_type'] = request.POST['auth_type']
+
+		if(authType == 'K'):
+			request.session['question'] = request.POST['question']
+			request.session['answer'] = request.POST['answer']
+		elif(authType == 'L'):
+			request.session['lat'] = request.POST['lat']
+			request.session['lang'] = request.POST['lang']
+		else:
+			request.session['orientation'] = request.POST['orientation']
+			request.session['touches'] = request.POST['touches']
 	else:
 		request.session['api_key'] = settings.LIVE_ENSURE["API_KEY"]
 		request.session['api_password'] = settings.LIVE_ENSURE["API_PASSWORD"]
 		request.session['agent_id'] = settings.LIVE_ENSURE["AGENT_ID"]
-	return render(request, 'demosocial/base.html', {"map_key" : _getMapKey(request)})
+		print(request.session.keys())
+	ctx = {
+		"map_key": _getMapKey(request),
+	}
+	for i in request.session.keys():
+		print(i , request.session[i])
+		ctx[i] = request.session[i]
+	return render(request, 'demosocial/base.html', ctx)
 
 def home(request):
 	return render(request, 'demosocial/social/home.html')
@@ -67,18 +86,17 @@ def getCode(request):
 	return HttpResponse(re)
 
 def createChallenge(request):
-	authType = request.session['auth_type']
+	authType = request.session['auth_type'] if "auth_type" in request.session else ""
 	live = createLiveObject(request)
 	re = None
-	print("Creating challenge ", authType)
-	print(request.session)
 	if(authType == 'K'):
-
 		re = live.addPromptChallenge(request.session['question'], request.session['answer'], request.POST['sessionToken'])
 	elif(authType == 'L'):
 		re = live.addLocationChallenge(request.session["lat"], request.session["lang"], 10, request.POST["sessionToken"])
 	elif(authType == 'B'):
 		re = live.addTouchChallenge(request.session['orientation'], request.session['touches'], request.POST['sessionToken'])
+	else:
+		return HttpResponse(json.dumps({"status": True}), content_type="application/json")
 
 	return HttpResponse(re, content_type="application/json")
 
