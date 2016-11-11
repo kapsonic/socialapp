@@ -16,10 +16,23 @@ INSTALLED_APPS = [
     'demosocial'
 ]
 ```
+- Add keys to settings file to access liveensure API
+
+```
+LIVE_ENSURE = {
+    "API_KEY": "<API key>",
+    "API_PASSWORD": "<API password>",
+    "AGENT_ID": "<Agent id>",
+    "API_HOST": "<API host>",
+    "GOOGLE_MAP_KEY": "<Google Map Key(optional, but map will work without this)>"
+}
+```
 
 - Update urls.py to add urls for demosocial app
 
 ```
+from django.conf.urls import include
+...
 urlpatterns = [
     ...
     url(r'^demo/', include('demosocial.urls')),
