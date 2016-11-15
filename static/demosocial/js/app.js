@@ -18,16 +18,16 @@ function getQRCode() {
     var url = "/QR?w=240&sessionToken=" + localStorage.getItem('sessionToken');
     return $.get(urls.getCode, { sessionToken: localStorage.getItem('sessionToken') }, function(response) {
         if (typeof window.orientation == 'undefined') {
-            $("#icon-img").hide();
-            $("#email-form").hide();
-            $("#p1").hide();
-            var u = $("#exampleInputEmail1").val();
-            if(u) {
-                $("#username").text(u.split('@')[0]);
-            }
-            $("#p2").show();
             $("#qr-img").attr("src", response);
         }
+        $("#icon-img").hide();
+        $("#email-form").hide();
+        $("#p1").hide();
+        var u = $("#exampleInputEmail1").val();
+        if (u) {
+            $("#username").text(u.split('@')[0]);
+        }
+        $("#p2").show();
     });
 }
 
@@ -44,12 +44,15 @@ function poll() {
 
     // retrun;
     var dfd = jQuery.Deferred();
-    
+    var i = 0;
+    var ajx = null;
     clear = setInterval(function() {
-       
-        $.get(urls.pollStatus, { sessionToken: localStorage.getItem('sessionToken') }, function(response) {
+        if(ajx && ajx.state() === "pending") {
+            return;
+        }
+        ajx = $.get(urls.pollStatus, { sessionToken: localStorage.getItem('sessionToken') }, function(response) {
             console.log(response);
-            $("#polling-status-ip").val(response.sessionStatus);
+            $("#info").text("Wait... " + (response.sessionStatus));
             if (response.sessionStatus === "FAILED") {
                 clearInterval(clear);
                 dfd.resolve(false);
@@ -57,7 +60,6 @@ function poll() {
                 clearInterval(clear);
                 dfd.resolve(true);
             }
-            
         });
     }, 5000);
 

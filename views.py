@@ -63,7 +63,12 @@ def chat(request):
 	request.session['api_key'] = settings.LIVE_ENSURE["API_KEY"]
 	request.session['api_password'] = settings.LIVE_ENSURE["API_PASSWORD"]
 	request.session['agent_id'] = settings.LIVE_ENSURE["AGENT_ID"]
-	return render(request, 'demosocial/social/chat.html', {"username": request.session['username']})
+
+	authType = "D"
+	if("auth_type" in request.session):
+		authType = request.session['auth_type']
+
+	return render(request, 'demosocial/social/chat.html', {"username": request.session['username'], "auth_type": authType})
 
 def healthCareHome(request):
 	request.session['api_key'] = settings.LIVE_ENSURE["API_KEY"]

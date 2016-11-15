@@ -2,11 +2,11 @@
 <div class="row">
     <div class="col-md-12">
         <p>Hey {{username}},</p>
-        <p>Click to see the photo.</p>
-        <p>Make sure you are home.</p>
+        <p id="mesg2"></p>
+        <p id="mesg3"></p>
     </div>
     <div class="col-md-12" style="margin-top: 30px">
-        <i id="icon-img" class="fa fa-image pull-right" style="font-size:100px"></i>
+        <i id="icon-img" class="fa pull-right" style="font-size:100px"></i>
         <img class="pull-right img-responsive" src="" alt="" id="qr-img">
         <div class="clearfix"></div>
         <p id="info" class="pull-right"></p>
@@ -24,6 +24,27 @@
 {% block javascripts %}
 <script type="text/javascript">
 $(document).ready(function() {
+    setTimeout(function() {
+        var authType = "{{auth_type}}";
+        $("#mesg2").text('Click here to see the photo');
+        var cText = "";
+        switch(authType) {
+            case "K":
+                cText = "Gotta make sure its you";
+                break;
+            case "L":
+                cText = "Make sure you are home";
+                break;
+            case "B":
+                cText = "Do our secret thing";
+                break;
+            case "D":
+                cText = "";
+                break;
+        }
+        $("#mesg3").text(cText);
+        $("#icon-img").addClass("fa-image");
+    }, 2000);
     $("#icon-img").click(function(e) {
         e.preventDefault();
         createChallenge().then(getQRCode).then(poll).then(function(r) {
