@@ -1,7 +1,8 @@
 {% extends 'demosocial/layout.html' %} 
 {% block content %}
-<form action="{% url 'admin' %}" method="POST">
+<form action="{% url 'admin' %}" method="POST" id="main-admin-form">
 {% csrf_token %}
+    <input type="hidden" id="reset-input" name="reset"/>
     <div id="content">
         <div class="row">
             <div class="col-md-4">
@@ -16,7 +17,8 @@
         </div>
     </div>
     <div class="col-sm-12">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button id="reset-btn" class="btn btn-danger">Reset</button>
     </div>
 </form>
 
@@ -26,6 +28,10 @@
 <script>
     $("document").ready(function() {
         $("#{{auth_type}}-radio").attr('checked', true);
+        $("#reset-btn").click(function() {
+            $("#reset-input").val("true");
+            $("#main-admin-form").submit();
+        });
     });
 </script>
 {% endblock %}

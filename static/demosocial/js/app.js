@@ -22,7 +22,7 @@ function getQRCode() {
         }
         $("#icon-img").hide();
         $("#email-form").hide();
-        $("#p1").hide();
+        $("#p1").text('Scan to authenticate');
         var u = $("#exampleInputEmail1").val();
         if (u) {
             $("#username").text(u.split('@')[0]);

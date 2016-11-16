@@ -15,6 +15,7 @@
 </head>
 
 <body>
+{% block headerbar %}
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header text-center">
@@ -24,6 +25,7 @@
             </div>
         </div>
     </nav>
+{% endblock %}
     <div class="container-fluid">
         {% block content %} {% endblock %}
         

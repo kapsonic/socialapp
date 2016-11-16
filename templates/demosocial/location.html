@@ -1,14 +1,13 @@
 <div class="" margin-left="15px">
     <div class="col-sm-12">
         <label for="">
-            <input type="radio" name="auth_type" value="L" id="L-radio"/> Location Based
+            <input type="radio" name="auth_type" value="L" id="L-radio" /> Location Based
         </label>
         <div class="form-group form-group-modified">
             <div class="row row-margin">
                 <div class="col-sm-12">
                     <input name="lat" value="{{lat}}" id="lat" class="form-control form-control-width" type="text" placeholder="lat">
                     <input name="lang" value="{{lang}}" id="lang" class="form-control form-control-width" type="text" placeholder="Lang">
-                   
                 </div>
             </div>
             <div class="row row-margin">
@@ -16,7 +15,6 @@
                     <div id="dvMap" class="map-container marginTop-40">
                         <h3>Loading...</h3></div>
                 </div>
-                
             </div>
         </div>
     </div>
@@ -25,32 +23,41 @@
 <script type="text/javascript">
 $(document).ready(function() {
     console.log("Checking geolocation", navigator.geolocation.getCurrentPosition);
-    if (navigator.geolocation) {
+    var lat = "{{lat}}";
+    var lang = "{{lang}}";
+    var LatLng = null;
+    var mapOptions = {
+        center: null,
+        zoom: 13,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    var map = null;
+
+    if (lat && lang) {
+        mapOptions.center = new google.maps.LatLng(lat, lang);
+        map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
+
+        $("#lat").val(lat);
+        $("#lang").val(lang);
+        var marker = new google.maps.Marker({
+            position: mapOptions.center,
+            map: map,
+            title: 'Your last marked location'
+        });
+        bindMapClick(map);
+    } else if (navigator.geolocation) {
         console.log("Geolocation service is there.");
         navigator.geolocation.getCurrentPosition(function(p) {
             console.log("Called this with geolocation", p);
-            var LatLng = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
-            var mapOptions = {
-                center: LatLng,
-                zoom: 13,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
+            LatLng = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
+            mapOptions.center = LatLng;
+            map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
             var marker = new google.maps.Marker({
                 position: LatLng,
                 map: map,
-                title: "<div style = 'height:60px;width:200px'><b>Your location:</b><br />Latitude: " + p.coords.latitude + "<br />Longitude: " + p.coords.longitude
+                title: 'Your location'
             });
-            google.maps.event.addListener(marker, "click", function(e) {
-                var infoWindow = new google.maps.InfoWindow();
-                infoWindow.setContent(marker.title);
-                infoWindow.open(map, marker);
-            });
-
-            google.maps.event.addListener(map, "click", function(e) {
-                $("#lat").val(e.latLng.lat());
-                $("#lang").val(e.latLng.lng());
-            });
+            bindMapClick(map);
             $("#lat").val(p.coords.latitude);
             $("#lang").val(p.coords.longitude);
         }, function() {
@@ -61,17 +68,22 @@ $(document).ready(function() {
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
             var map = new google.maps.Map(document.getElementById("dvMap"), mapOptions);
-
-            google.maps.event.addListener(map, "click", function(e) {
-                $("#lat").val(e.latLng.lat());
-                $("#lang").val(e.latLng.lng());
-            });
+            bindMapClick(map);
             alert("Could not find your current location");
 
         });
     } else {
         alert('Geo Location feature is not supported in this browser.');
     }
+
+    function bindMapClick(map) {
+        google.maps.event.addListener(map, "click", function(e) {
+            $("#lat").val(e.latLng.lat());
+            $("#lang").val(e.latLng.lng());
+        });
+    }
+
+
     $("#submit").click(function(e) {
         e.preventDefault();
         makeInitSessionCall().then(addLocationChallenge).then(getQRCode).then(poll);

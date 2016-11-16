@@ -31,19 +31,22 @@ def createLiveObject(request):
 
 def admin(request):
 	if(request.method == 'POST'):
-		authType = request.POST['auth_type']
-		request.session.clear()
-		request.session['auth_type'] = request.POST['auth_type']
-
-		if(authType == 'K'):
-			request.session['question'] = request.POST['question']
-			request.session['answer'] = request.POST['answer']
-		elif(authType == 'L'):
-			request.session['lat'] = request.POST['lat']
-			request.session['lang'] = request.POST['lang']
+		if(request.POST['reset'] == 'true'):
+			request.session.clear()
 		else:
-			request.session['orientation'] = request.POST['orientation']
-			request.session['touches'] = request.POST['touches']
+			authType = request.POST['auth_type']
+			request.session.clear()
+			request.session['auth_type'] = authType
+
+			if(authType == 'K'):
+				request.session['question'] = request.POST['question']
+				request.session['answer'] = request.POST['answer']
+			elif(authType == 'L'):
+				request.session['lat'] = request.POST['lat']
+				request.session['lang'] = request.POST['lang']
+			else:
+				request.session['orientation'] = request.POST['orientation']
+				request.session['touches'] = request.POST['touches']
 
 	ctx = {
 		"map_key": _getMapKey(request),

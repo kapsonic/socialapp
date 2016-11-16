@@ -1,7 +1,14 @@
-{% extends 'demosocial/layout.html' %} {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <h1><i class="fa fa-heartbeat"></i>&nbsp;Healthcare Portal</h1>
+
+{% extends 'demosocial/layout.html' %} 
+{% block headerbar %}{% endblock %}
+{% block content %}
+{% load staticfiles %}
+<div class="row" style="margin-top: 80px">
+    <div class="col-md-10 col-md-offset-1">
+        <div class="col-md-6">
+            <h2><i class="fa fa-heartbeat"></i>&nbsp;Healthcare Portal</h2></div>
+        <div class="col-md-6">
+            <h2 id="main-heading" class="pull-right">Access your medical record</h2></div>
     </div>
 </div>
 <div class="row" style="margin-top: 50px">
@@ -11,9 +18,7 @@
         </div>
         <div class="col-md-6" id="cnt">
             <div class="col-md-6 col-md-offset-6" style="margin-top: 20px;">
-                <p id="p1" class="text-info">Please login to access medical record</p>
-                <p id="p2" class="text-success">Welcome <span id="username"></span>, Scan to access medical record.</p>
-                <p id="p3" class="text-danger">Sorry, thats not you!</p>
+                <h4 id="p1" class="pull-right text-info"></h4>
                 <form id="email-form">
                     <div>
                         <div class="form-group">
@@ -25,6 +30,55 @@
                 </form>
             </div>
             <img class="img-responsive pull-right" id="qr-img" src="">
+            
+            <table id="medical-record" class="table table-bordered table-striped">
+                <thead style="font-weight: bold; background-color: #142F3D; color: #fff">
+                    <tr>
+                        <td>Patient</td>
+                        <td><span id="email-name"></span></td>
+                        <td></td>
+                        <td>ID: 034992|f010</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Email</td>
+                        <td><span id="email-value"></span></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Antibiotic</td>
+                        <td>Dual Penicilin</td>
+                        <td>1.0 mL</td>
+                        <td>SC</td>
+                    </tr>
+                    <tr>
+                        <td>Vaccines</td>
+                        <td>FVRPC</td>
+                        <td>2.0 mL</td>
+                        <td>IM</td>
+                    </tr>
+                    <tr>
+                        <td>Fluids</td>
+                        <td>Saline</td>
+                        <td>200 mL</td>
+                        <td>IV</td>
+                    </tr>
+                    <tr>
+                        <td>Analgesia</td>
+                        <td>Buprenorphine</td>
+                        <td>0.05 mL</td>
+                        <td>OTM</td>
+                    </tr>
+                    <tr>
+                        <td>Reversal</td>
+                        <td>Yohimbine</td>
+                        <td>Rapid heartbeat, Kidney failure, siezure</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -39,20 +93,31 @@
 <script type="text/javascript">
 $('#p2').hide();
 $('#p3').hide();
+
+$('#medical-record').hide();
 $(document).ready(function() {
     $("#submit").click(function(e) {
         e.preventDefault();
         makeInitSessionCall().then(createChallenge).then(getQRCode).then(poll).then(function(r) {
             if (r) {
-                
-                $("#qr-img").attr("src", "http://ocgainesville.org/assets/2013/02/medical-record-other-antibiotics-e1404789839762.jpg");
-                $("#p2").hide();
-                
+                var u = $("#exampleInputEmail1").val();
+                $("#qr-img").hide();
+                $("#main-heading").html("Medical Record: <span style='color: green'>" + u.split('@')[0] + "</span>");
+                $("#email-name").text(u.split('@')[0])
+                $("#email-value").text(u);
+                $('#medical-record').show();
+
+
             } else {
-            	$("#p2").hide();
-            	$("#p3").show();
-                $("#qr-img").attr("src", "https://cdn0.iconfinder.com/data/icons/shift-free/32/Error-128.png");
+                $("#p3").show();
+                $('#medical-record').hide();
+                $("#main-heading").hide();
+                
+                $("#qr-img").attr("src", "{% static 'demosocial/img/fail.png' %}");
             }
+
+            
+            $("#p1").hide()
         });
     });
 });
