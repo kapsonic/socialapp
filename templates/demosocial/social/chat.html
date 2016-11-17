@@ -1,7 +1,20 @@
-{% extends 'demosocial/layout.html' %} {% block content %}
+{% extends 'demosocial/layout.html' %} 
+{% load staticfiles %}
+{% block headerbar %}
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header text-center">
+                <a class="navbar-brand" href="#">
+                    <i class="fa fa-comments"></i> My Chat Application
+                </a>
+            </div>
+        </div>
+    </nav>
+{% endblock %}
+{% block content %}
 <div class="row">
     <div class="col-md-12">
-        <p>Hey {{username}},</p>
+        <p id="mesg1"><b>Chat 66:</b> Hey {{username}},</p>
         <p id="mesg2"></p>
         <p id="mesg3"></p>
     </div>
@@ -10,6 +23,9 @@
         <img class="pull-right img-responsive" src="" alt="" id="qr-img">
         <div class="clearfix"></div>
         <p id="info" class="pull-right"></p>
+    </div>
+    <div class="col-md-12" style="margin-top: 30px">
+        <p id="mesg4"></p>
     </div>
 </div>
 <footer style="position: absolute;bottom: 10px;width: 90%">
@@ -25,8 +41,12 @@
 <script type="text/javascript">
 $(document).ready(function() {
     setTimeout(function() {
+        $("#mesg2").html('<b> Chat 66:</b> Click here to see the photo');
+    }, 2000);
+
+    setTimeout(function() {
         var authType = "{{auth_type}}";
-        $("#mesg2").text('Click here to see the photo');
+        
         var cText = "";
         switch(authType) {
             case "K":
@@ -42,18 +62,28 @@ $(document).ready(function() {
                 cText = "";
                 break;
         }
-        $("#mesg3").text(cText);
+        $("#mesg3").html("<b>Chat 66:</b> " + cText);
+        
+    }, 4000);
+
+    setTimeout(function() {
         $("#icon-img").addClass("fa-image");
-    }, 2000);
+    }, 6000);
+
     $("#icon-img").click(function(e) {
         e.preventDefault();
         createChallenge().then(getQRCode).then(poll).then(function(r) {
             if(r) {
-                $("#qr-img").attr("src", "https://www.stagecoach.co.uk/Stagecoach/media/images/Parties/Mini%20Width/536x327-pop-party.jpg?width=536&height=326&ext=.jpg");
-                $("#info").text("Cool picture");
+                $("#qr-img").attr("src", "{% static 'demosocial/img/social_success.jpg' %}");
+
+                setTimeout(function() {
+                    $("#mesg4").html("<b>Chat 66</b>: Cool picture, right?");
+                }, 5000);
             } else {
-                $("#qr-img").attr("src", "https://cdn0.iconfinder.com/data/icons/shift-free/32/Error-128.png");
-                $("#info").text("Sorry, thats not you!");
+                $("#qr-img").attr("src", "{% static 'demosocial/img/social_denied.jpg' %}");
+                setTimeout(function() {
+                    $("#mesg4").html("<b>Chat 66</b>: Is that really you?");
+                }, 5000);
             }
         });
     });

@@ -52,7 +52,7 @@ function poll() {
         }
         ajx = $.get(urls.pollStatus, { sessionToken: localStorage.getItem('sessionToken') }, function(response) {
             console.log(response);
-            $("#info").text("Wait... " + (response.sessionStatus));
+            
             if (response.sessionStatus === "FAILED") {
                 clearInterval(clear);
                 dfd.resolve(false);
