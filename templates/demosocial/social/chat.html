@@ -1,5 +1,6 @@
 {% extends 'demosocial/layout.html' %} 
 {% load staticfiles %}
+{% block title %}My Chat Application {% endblock %}
 {% block headerbar %}
     <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -38,6 +39,7 @@
 {% endblock %} 
 
 {% block javascripts %}
+<script src="https://npmcdn.com/imagesloaded@4.1/imagesloaded.pkgd.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
     setTimeout(function() {
@@ -78,7 +80,7 @@ $(document).ready(function() {
 
                 setTimeout(function() {
                     $("#mesg4").html("<b>Chat 66</b>: Cool picture, right?");
-                }, 5000);
+                }, 8000);
             } else {
                 $("#qr-img").attr("src", "{% static 'demosocial/img/social_denied.jpg' %}");
                 setTimeout(function() {
