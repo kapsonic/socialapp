@@ -51,6 +51,9 @@ def admin(request):
 	ctx = {
 		"map_key": _getMapKey(request),
 	}
+	request.session['api_key'] = settings.LIVE_ENSURE["API_KEY"]
+	request.session['api_password'] = settings.LIVE_ENSURE["API_PASSWORD"]
+	request.session['agent_id'] = settings.LIVE_ENSURE["AGENT_ID"]
 
 	for i in request.session.keys():
 		ctx[i] = request.session[i]
