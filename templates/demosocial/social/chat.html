@@ -53,18 +53,21 @@ $(document).ready(function() {
         switch(authType) {
             case "K":
                 cText = "Gotta make sure its you";
+                $("#mesg3").html("<b>Chat 66:</b> " + cText);
                 break;
             case "L":
                 cText = "Make sure you are home";
+                $("#mesg3").html("<b>Chat 66:</b> " + cText);
                 break;
             case "B":
                 cText = "Do our secret thing";
+                $("#mesg3").html("<b>Chat 66:</b> " + cText);
                 break;
             case "D":
                 cText = "";
                 break;
         }
-        $("#mesg3").html("<b>Chat 66:</b> " + cText);
+        
         
     }, 4000);
 
@@ -75,17 +78,19 @@ $(document).ready(function() {
     $("#icon-img").click(function(e) {
         e.preventDefault();
         createChallenge().then(getQRCode).then(poll).then(function(r) {
-            if(r) {
+            if(r === 1) {
                 $("#qr-img").attr("src", "{% static 'demosocial/img/social_success.jpg' %}");
 
                 setTimeout(function() {
                     $("#mesg4").html("<b>Chat 66</b>: Cool picture, right?");
-                }, 8000);
-            } else {
+                }, 6000);
+            } else if(r === 0){
                 $("#qr-img").attr("src", "{% static 'demosocial/img/social_denied.jpg' %}");
                 setTimeout(function() {
                     $("#mesg4").html("<b>Chat 66</b>: Is that really you?");
                 }, 5000);
+            } else if(r === -1) {
+                $("#qr-img").attr("src", "http://67.media.tumblr.com/9c6d18effdc23ac485ca45e725e4814a/tumblr_inline_nuopzwjMjp1spdppr_500.jpg");
             }
         });
     });

@@ -1,14 +1,21 @@
-
-{% extends 'demosocial/layout.html' %} 
-{% block title %}Healthcare Portal Demo {% endblock %}
-{% block headerbar %}{% endblock %}
-{% block content %}
-{% load staticfiles %}
-<div class="row" style="margin-top: 80px">
+ {% extends 'demosocial/layout.html' %} {% block title %}Healthcare Portal Demo {% endblock %} 
+{% block headerbar %}
+    <nav class="navbar navbar-default visible-xs">
+        <div class="container-fluid">
+            <div class="navbar-header text-center">
+                <a class="navbar-brand" href="#">
+                    <i class="fa fa-heartbeat"></i>&nbsp;Healthcare Portal
+                </a>
+            </div>
+        </div>
+    </nav>
+{% endblock %}
+  {% block content %} {% load staticfiles %}
+<div class="row" >
     <div class="col-md-10 col-md-offset-1">
-        <div class="col-md-6">
+        <div class="col-sm-6 hidden-xs">
             <h2><i class="fa fa-heartbeat"></i>&nbsp;Healthcare Portal</h2></div>
-        <div class="col-md-6">
+        <div class="col-sm-6 col-xs-12">
             <h2 id="main-heading" class="pull-right">Access your medical record</h2></div>
     </div>
 </div>
@@ -31,59 +38,77 @@
                 </form>
             </div>
             <img class="img-responsive pull-right" id="qr-img" src="">
-            
-            <table id="medical-record" class="table table-bordered table-striped">
-                <thead style="font-weight: bold; background-color: #142F3D; color: #fff">
-                    <tr>
-                        <td>Patient</td>
-                        <td><span id="email-name"></span></td>
-                        <td></td>
-                        <td>ID: 034992|f010</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Email</td>
-                        <td><span id="email-value"></span></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Antibiotic</td>
-                        <td>Dual Penicilin</td>
-                        <td>1.0 mL</td>
-                        <td>SC</td>
-                    </tr>
-                    <tr>
-                        <td>Vaccines</td>
-                        <td>FVRPC</td>
-                        <td>2.0 mL</td>
-                        <td>IM</td>
-                    </tr>
-                    <tr>
-                        <td>Fluids</td>
-                        <td>Saline</td>
-                        <td>200 mL</td>
-                        <td>IV</td>
-                    </tr>
-                    <tr>
-                        <td>Analgesia</td>
-                        <td>Buprenorphine</td>
-                        <td>0.05 mL</td>
-                        <td>OTM</td>
-                    </tr>
-                    <tr>
-                        <td>Reversal</td>
-                        <td>Yohimbine</td>
-                        <td>Rapid heartbeat, Kidney failure, siezure</td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div id="medical-record" class="table-responsive">
+                <table  class="table table-bordered table-striped">
+                    <thead style="font-weight: bold; background-color: #142F3D; color: #fff">
+                        <tr>
+                            <td>Patient</td>
+                            <td><span id="email-name"></span></td>
+                            <td></td>
+                            <td>ID: 034992|f010</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Email</td>
+                            <td><span id="email-value"></span></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Antibiotic</td>
+                            <td>Dual Penicilin</td>
+                            <td>1.0 mL</td>
+                            <td>SC</td>
+                        </tr>
+                        <tr>
+                            <td>Vaccines</td>
+                            <td>FVRPC</td>
+                            <td>2.0 mL</td>
+                            <td>IM</td>
+                        </tr>
+                        <tr>
+                            <td>Fluids</td>
+                            <td>Saline</td>
+                            <td>200 mL</td>
+                            <td>IV</td>
+                        </tr>
+                        <tr>
+                            <td>Analgesia</td>
+                            <td>Buprenorphine</td>
+                            <td>0.05 mL</td>
+                            <td>OTM</td>
+                        </tr>
+                        <tr>
+                            <td>Reversal</td>
+                            <td>Yohimbine</td>
+                            <td>Rapid heartbeat, Kidney failure, siezure</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
-<footer style="position: absolute;bottom: 10px;width: 90%">
+<style>
+    @media (min-width: 768px) {
+        .footer-custom {
+            position: absolute;bottom: 10px;width: 90%
+        }
+
+        body {
+            margin-top: 80px
+        }
+    }
+    @media (max-width: 767px) {
+        .footer-custom {
+            margin-top: 30px;
+            
+        }
+    }
+</style>
+<footer class="footer-custom" >
     <div class="row">
         <div class="col-md-12">
             <a href="{% url 'healthcare' %}" class="pull-right btn btn-danger">Quit</a>
@@ -100,7 +125,7 @@ $(document).ready(function() {
     $("#submit").click(function(e) {
         e.preventDefault();
         makeInitSessionCall().then(createChallenge).then(getQRCode).then(poll).then(function(r) {
-            if (r) {
+            if (r === 1) {
                 var u = $("#exampleInputEmail1").val();
                 $("#qr-img").hide();
                 $("#main-heading").html("Medical Record: <span style='color: green'>" + u.split('@')[0] + "</span>");
@@ -109,15 +134,17 @@ $(document).ready(function() {
                 $('#medical-record').show();
 
 
-            } else {
+            } else if (r === 0) {
                 $("#p3").show();
                 $('#medical-record').hide();
                 $("#main-heading").hide();
-                
+
                 $("#qr-img").attr("src", "{% static 'demosocial/img/fail.png' %}");
+            } else if (r === -1) {
+                $("#qr-img").attr("src", "http://67.media.tumblr.com/9c6d18effdc23ac485ca45e725e4814a/tumblr_inline_nuopzwjMjp1spdppr_500.jpg");
             }
 
-            
+
             $("#p1").hide()
         });
     });

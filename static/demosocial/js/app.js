@@ -38,7 +38,7 @@ function createChallenge() {
 }
 
 function poll() {
-    if (typeof window.orientation !== 'undefined') {
+    if ((typeof window.orientation) !== 'undefined') {
         window.location = "liveensure://localhost/mobile?sessionToken=" + localStorage.getItem('sessionToken') + "&status=https://app23.liveensure.com/live-identity/idr";
     }
 
@@ -46,6 +46,8 @@ function poll() {
     var dfd = jQuery.Deferred();
     var i = 0;
     var ajx = null;
+    var intervalCheck = true;
+
     clear = setInterval(function() {
         if(ajx && ajx.state() === "pending") {
             return;
@@ -54,14 +56,24 @@ function poll() {
             console.log(response);
             
             if (response.sessionStatus === "FAILED") {
+                intervalCheck = false;
                 clearInterval(clear);
-                dfd.resolve(false);
+                dfd.resolve(0);
             } else if (response.sessionStatus === "SUCCESS") {
+                intervalCheck = false;
                 clearInterval(clear);
-                dfd.resolve(true);
+                dfd.resolve(1);
             }
         });
     }, 5000);
+
+    setTimeout(function() {
+        if(intervalCheck) {
+            clearInterval(clear);
+            console.log(clear);
+            dfd.resolve(-1);    
+        }
+    }, 1000 * 120);
 
     return dfd.promise();
 }
